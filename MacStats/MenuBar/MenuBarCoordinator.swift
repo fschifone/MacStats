@@ -88,8 +88,8 @@ final class MenuBarCoordinator: NSObject {
             : NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
         let template = " " + StatPresentation.templateTitle(for: stat, settings: settings)
         let textWidth = (template as NSString).size(withAttributes: [.font: font]).width
-        let imageWidth: CGFloat = stat == .battery ? 26 : 20
-        return ceil(textWidth + imageWidth + 10)
+        let imageWidth: CGFloat = stat == .battery ? 22 : 16
+        return ceil(textWidth + imageWidth + 2)
     }
 
     private static func symbolImage(candidates: [String], description: String) -> NSImage? {
