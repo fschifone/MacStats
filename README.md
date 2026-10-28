@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/icon.png" width="128" alt="MacStats icon">
+</p>
+
 # MacStats
 
 A free, native macOS menu bar system monitor — CPU, memory, fans, temperatures, network, disk, GPU, battery and Bluetooth, with live graphs. Think Usage Pro or iStat Menus, but free and open.
