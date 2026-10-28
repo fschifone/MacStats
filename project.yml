@@ -1,0 +1,31 @@
+name: MacStats
+options:
+  bundleIdPrefix: com.fabrizio
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+targets:
+  MacStats:
+    type: application
+    platform: macOS
+    sources: [MacStats]
+    info:
+      path: MacStats/Info.plist
+      properties:
+        CFBundleDisplayName: MacStats
+        LSUIElement: true
+        LSMinimumSystemVersion: "14.0"
+        NSBluetoothAlwaysUsageDescription: MacStats shows the battery level of your connected Bluetooth devices.
+        CFBundleIconFile: AppIcon
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fabrizio.MacStats
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: NO
+        ENABLE_APP_SANDBOX: NO
+        SWIFT_VERSION: "5.10"
+        ARCHS: arm64
+        GENERATE_INFOPLIST_FILE: NO
