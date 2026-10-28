@@ -11,6 +11,7 @@ final class MenuBarCoordinator: NSObject {
     private var items: [MenuBarStat: NSStatusItem] = [:]
     private var currentStats: [MenuBarStat] = []
     private var currentInterval: Double
+    private var currentMemoryTemplate = ""
     private var settingsSubscription: AnyCancellable?
 
     init(store: StatsStore) {
@@ -39,16 +40,16 @@ final class MenuBarCoordinator: NSObject {
     }
 
     private func settingsChanged() {
-        if desiredStats() != currentStats {
+        // The memory item's width depends on its display options, so a change
+        // there also forces a rebuild.
+        let memoryTemplate = StatPresentation.templateTitle(for: .memory, settings: settings)
+        if desiredStats() != currentStats || memoryTemplate != currentMemoryTemplate {
+            currentMemoryTemplate = memoryTemplate
             rebuildItems()
         }
         if settings.refreshInterval != currentInterval {
             currentInterval = settings.refreshInterval
             store.restartTimer()
-        }
-        // The memory item's width depends on its display options.
-        for (stat, item) in items {
-            item.length = fixedLength(for: stat)
         }
         refreshTitles()
     }
@@ -68,28 +69,28 @@ final class MenuBarCoordinator: NSObject {
     }
 
     private func makeStatusItem(for stat: MenuBarStat) -> NSStatusItem {
-        let item = NSStatusBar.system.statusItem(withLength: fixedLength(for: stat))
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = item.button {
-            button.image = Self.symbolImage(candidates: stat.symbolCandidates, description: stat.label)
+            // Render the widest plausible content once and freeze the item at
+            // that width, so it never shifts as values change.
+            let sizingSymbols = stat == .battery ? ["battery.100percent.bolt"] : stat.symbolCandidates
+            button.image = Self.symbolImage(candidates: sizingSymbols, description: stat.label)
             button.imagePosition = .imageLeading
             button.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
+            if stat == .network {
+                button.attributedTitle = Self.twoLineTitle(top: "↓ 99.9 MB/s", bottom: "↑ 99.9 MB/s")
+            } else {
+                button.title = " " + StatPresentation.templateTitle(for: stat, settings: settings)
+            }
+            button.sizeToFit()
+            item.length = ceil(button.frame.width)
+
+            button.image = Self.symbolImage(candidates: stat.symbolCandidates, description: stat.label)
             button.title = " --"
             button.target = self
             button.action = #selector(togglePopover(_:))
         }
         return item
-    }
-
-    /// Fixed item width: icon plus the widest plausible value, so items don't
-    /// shift as values change.
-    private func fixedLength(for stat: MenuBarStat) -> CGFloat {
-        let font = stat == .network
-            ? NSFont.monospacedDigitSystemFont(ofSize: 8.5, weight: .medium)
-            : NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
-        let template = " " + StatPresentation.templateTitle(for: stat, settings: settings)
-        let textWidth = (template as NSString).size(withAttributes: [.font: font]).width
-        let imageWidth: CGFloat = stat == .battery ? 22 : 16
-        return ceil(textWidth + imageWidth + 2)
     }
 
     private static func symbolImage(candidates: [String], description: String) -> NSImage? {
