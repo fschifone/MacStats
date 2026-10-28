@@ -43,6 +43,26 @@ A free, native macOS menu bar system monitor — CPU, memory, fans, temperatures
 - memory display options, refresh interval (1/2/5 s), graph history (5/10/30 min), battery graph window
 - launch at login
 
+## Install
+
+There are no prebuilt binaries yet — building it yourself takes a minute and only needs Xcode:
+
+```sh
+git clone https://github.com/fschifone/MacStats.git
+cd MacStats
+xcodebuild -project MacStats.xcodeproj -scheme MacStats -configuration Release -derivedDataPath build build
+cp -R build/Build/Products/Release/MacStats.app /Applications/
+open /Applications/MacStats.app
+```
+
+On first launch:
+
+- macOS asks for **Bluetooth** permission — allow it to see device battery levels (everything else works if you deny).
+- The app lives in the **menu bar only** (no Dock icon). Click any of its menu bar items to open the stats popover, and use the gear icon in the popover for Settings.
+- Turn on **Launch at login** in Settings → General if you want it always running.
+
+If you ever run a copy downloaded from the internet instead of building it, macOS Gatekeeper will block the unsigned app — right-click → Open once, or clear the quarantine flag with `xattr -dr com.apple.quarantine /Applications/MacStats.app`.
+
 ## Building
 
 Requires Xcode 15+. The project file is generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml`, but a generated `MacStats.xcodeproj` is committed, so either works:
