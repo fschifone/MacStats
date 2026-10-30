@@ -73,19 +73,22 @@ final class MenuBarCoordinator: NSObject {
         if let button = item.button {
             // Render the widest plausible content once and freeze the item at
             // that width, so it never shifts as values change.
-            let sizingSymbols = stat == .battery ? ["battery.100percent.bolt"] : stat.symbolCandidates
-            button.image = Self.symbolImage(candidates: sizingSymbols, description: stat.label)
             button.imagePosition = .imageLeading
             button.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
             if stat == .network {
+                // The ↓/↑ prefixes in the lines make an icon redundant.
                 button.attributedTitle = Self.twoLineTitle(top: "↓ 99.9 MB/s", bottom: "↑ 99.9 MB/s")
             } else {
+                let sizingSymbols = stat == .battery ? ["battery.100percent.bolt"] : stat.symbolCandidates
+                button.image = Self.symbolImage(candidates: sizingSymbols, description: stat.label)
                 button.title = " " + StatPresentation.templateTitle(for: stat, settings: settings)
             }
             button.sizeToFit()
             item.length = ceil(button.frame.width)
 
-            button.image = Self.symbolImage(candidates: stat.symbolCandidates, description: stat.label)
+            if stat != .network {
+                button.image = Self.symbolImage(candidates: stat.symbolCandidates, description: stat.label)
+            }
             button.title = " --"
             button.target = self
             button.action = #selector(togglePopover(_:))

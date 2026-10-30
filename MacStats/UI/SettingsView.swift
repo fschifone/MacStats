@@ -205,8 +205,10 @@ struct MenuBarItemPreview: View {
         Group {
             if StatPresentation.isAvailable(stat, store: store) {
                 HStack(spacing: 4) {
-                    Image(systemName: StatPresentation.symbolName(for: stat, store: store))
-                        .font(.system(size: 11))
+                    if stat != .network {
+                        Image(systemName: StatPresentation.symbolName(for: stat, store: store))
+                            .font(.system(size: 11))
+                    }
                     if stat == .network {
                         let lines = StatPresentation.networkLines(store: store)
                         VStack(alignment: .trailing, spacing: 0) {
