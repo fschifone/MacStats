@@ -81,7 +81,7 @@ final class MenuBarCoordinator: NSObject {
             } else {
                 let sizingSymbols = stat == .battery ? ["battery.100percent.bolt"] : stat.symbolCandidates
                 button.image = Self.symbolImage(candidates: sizingSymbols, description: stat.label)
-                button.title = " " + StatPresentation.templateTitle(for: stat, settings: settings)
+                button.title = "\u{2009}" + StatPresentation.templateTitle(for: stat, settings: settings)
             }
             button.sizeToFit()
             item.length = ceil(button.frame.width)
@@ -116,11 +116,11 @@ final class MenuBarCoordinator: NSObject {
                 let lines = StatPresentation.networkLines(store: store)
                 button.attributedTitle = Self.twoLineTitle(top: lines.down, bottom: lines.up)
             case .battery:
-                button.title = " " + StatPresentation.title(for: stat, store: store, settings: settings)
+                button.title = "\u{2009}" + StatPresentation.title(for: stat, store: store, settings: settings)
                 button.image = Self.symbolImage(candidates: [StatPresentation.symbolName(for: stat, store: store)],
                                                 description: "Battery level")
             default:
-                button.title = " " + StatPresentation.title(for: stat, store: store, settings: settings)
+                button.title = "\u{2009}" + StatPresentation.title(for: stat, store: store, settings: settings)
             }
         }
     }
@@ -136,7 +136,7 @@ final class MenuBarCoordinator: NSObject {
             .paragraphStyle: paragraph,
             .baselineOffset: -4,
         ]
-        return NSAttributedString(string: " \(top)\n \(bottom)", attributes: attributes)
+        return NSAttributedString(string: "\(top)\n\(bottom)", attributes: attributes)
     }
 
     @objc private func togglePopover(_ sender: NSStatusBarButton) {
