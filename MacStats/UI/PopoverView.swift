@@ -37,7 +37,8 @@ struct PopoverView: View {
         switch section {
         case .cpu: CPUSectionView(store: store)
         case .memory: MemorySectionView(store: store)
-        case .sensors: SensorsSectionView(store: store)
+        case .fans: FansSectionView(store: store)
+        case .temperatures: TemperaturesSectionView(store: store)
         case .network: NetworkSectionView(store: store)
         case .disk: DiskSectionView(store: store)
         case .gpu: GPUSectionView(store: store)

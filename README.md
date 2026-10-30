@@ -29,7 +29,8 @@ A free, native macOS menu bar system monitor — CPU, memory, fans, temperatures
 
 - **CPU** — usage history, user/system split, load average, per-core bars (P/E clusters color-coded, hover a core for its exact %)
 - **Memory** — usage history, pressure, app/wired/compressed composition bar (hover a segment for its share), swap; hover the section for free/cached/swap details
-- **Fans & Temperatures** — CPU temperature history, fan rpm, CPU/GPU die temps (read from the SMC)
+- **Fans** — fan rpm per fan (read from the SMC)
+- **Temperatures** — CPU temperature history, CPU/GPU die temps (read from the SMC)
 - **Network** — down/up history with the active interface
 - **Disk** — usage bar, free space, live read/write throughput
 - **GPU** — utilization history

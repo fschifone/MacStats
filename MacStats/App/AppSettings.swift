@@ -45,7 +45,7 @@ enum MenuBarStat: String, CaseIterable, Identifiable {
 
 /// Sections of the popover, in user-configurable order.
 enum PopoverSection: String, CaseIterable, Identifiable {
-    case cpu, memory, sensors, network, disk, gpu, battery, bluetooth
+    case cpu, memory, fans, temperatures, network, disk, gpu, battery, bluetooth
 
     var id: String { rawValue }
 
@@ -53,7 +53,8 @@ enum PopoverSection: String, CaseIterable, Identifiable {
         switch self {
         case .cpu: return "CPU"
         case .memory: return "Memory"
-        case .sensors: return "Fans & Temperatures"
+        case .fans: return "Fans"
+        case .temperatures: return "Temperatures"
         case .network: return "Network"
         case .disk: return "Disk"
         case .gpu: return "GPU"
@@ -127,15 +128,23 @@ final class AppSettings: ObservableObject {
         }
 
         let allSections = PopoverSection.allCases.map(\.rawValue)
-        var order = (defaults.stringArray(forKey: "popoverOrder") ?? allSections)
-            .filter { allSections.contains($0) }
+        var order = defaults.stringArray(forKey: "popoverOrder") ?? allSections
+        // Migrate the old combined "sensors" section to the split sections.
+        if let index = order.firstIndex(of: "sensors") {
+            order.replaceSubrange(index...index, with: ["fans", "temperatures"])
+        }
+        order = order.filter { allSections.contains($0) }
         for section in allSections where !order.contains(section) {
             order.append(section)
         }
         popoverOrder = order
 
         if let stored = defaults.stringArray(forKey: "popoverEnabled") {
-            popoverEnabled = Set(stored).intersection(Set(allSections))
+            var enabled = Set(stored)
+            if enabled.remove("sensors") != nil {
+                enabled.formUnion(["fans", "temperatures"])
+            }
+            popoverEnabled = enabled.intersection(Set(allSections))
         } else {
             popoverEnabled = Set(allSections)
         }

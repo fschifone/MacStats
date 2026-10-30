@@ -243,7 +243,8 @@ struct PopoverSectionPreview: View {
         switch section {
         case .cpu: return [.cpu]
         case .memory: return [.memory]
-        case .sensors: return [.temperature, .fan]
+        case .fans: return [.fan]
+        case .temperatures: return [.temperature]
         case .network: return [.network]
         case .disk: return [.disk]
         case .gpu: return [.gpu]
